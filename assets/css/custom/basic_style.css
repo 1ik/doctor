@@ -1,0 +1,179 @@
+body{
+	background: white;
+	margin: 0px;
+}
+
+.head{
+	background: #F9F9F9;
+}
+
+#hidden{
+	position:absolute;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	height: 600px;
+	background: #E6E3DB;
+}
+
+
+#hidden_title{
+	font-family: 'Share', cursive;
+	font-weight: 300;
+}
+
+#hidden h2{
+	font-family:"Batang";
+	font-size: large;
+}
+
+
+.loginform{
+	margin-left: 300px;
+	margin-top: 50px;
+}
+
+#contact_us{
+	float:right;
+
+}
+
+#contact_us a{
+	float:right;
+	margin-right: 10px;
+	margin-top: 7px;
+}
+
+#big_container{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	background:white;
+}
+
+
+
+#main_container{
+	position:absolute;	
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	height: 700px;
+	background:white;
+	z-index: 2;
+	
+}
+
+
+
+
+
+.siteinfo{
+	float: right;
+	background: white;
+}
+
+
+
+.signinup{
+	margin-top: 0px;
+	float: right;
+	background: #E6E3DB;
+	padding:10px;
+	height:auto;
+	-moz-border-radius-bottomleft:15px;
+	-moz-border-radius-bottomright:15px;
+	-webkit-border-bottom-left-radius:15px;
+	-webkit-border-bottom-right-radius:15px;
+	border-bottom-left-radius:15px;
+	border-bottom-right-radius:15px;
+	cursor: pointer;
+}
+
+.signinup h4{
+	padding:0;
+	margin:0;
+}
+
+.signinup:hover{
+    -moz-box-shadow: -2px 6px 5px #000000;
+    -webkit-box-shadow: -2px 6px 5px #000000;
+    box-shadow: -2px 6px 5px #000000;
+    color: #000000;
+}
+
+
+
+.site_head{
+	background: transparent;
+	height: auto;
+	float: right;
+	background: #f9f9f9;
+}
+
+.menuebar{
+	background: #C83434;
+	height: 85px;
+}
+
+.menu{
+	
+}
+
+.menu ul{
+	list-style: none;
+	float: right;
+	margin-top:20px;
+}
+
+.menu ul li{
+	float: left;
+	padding:10px;
+	padding-top:8px;
+	padding-bottom:8px;
+	font-family: Consolas;
+	font-size: 20px;
+	
+}
+
+
+.menu ul li:hover{
+	background:#641313;
+    -moz-border-radius: 15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
+    color: white;
+    border: none 1px #390E0E;
+    cursor: pointer;
+}
+
+
+
+.debug{
+	background: orange;
+	border: 1px dotted yellow;
+}
+
+
+.footer{
+	background: #E6E3DB;
+	margin-top:80px;
+	position: absolute;
+	width: 100%;
+	height: 90px;
+	
+}
+
+.frontdivimg{
+	padding:5px;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+	-webkit-background-clip: padding;
+	-moz-background-clip: padding;     
+	background-clip: padding-box;
+	border: 10px solid #fff;
+	border: 10px solid rgba(255, 255, 255, 0.9);
+	outline: none;
+}
+
+
