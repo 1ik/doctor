@@ -16,6 +16,7 @@ class Doctor extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('doctor_model');
+        $this->load->model('medicine_model');
     }
 
     function index() {
@@ -83,56 +84,56 @@ class Doctor extends CI_Controller {
         echo $prescription_id;
     }
 
-    
-    
-    
     function medicineList() {
-        $result = mysql_query("SELECT * FROM people;");
-
-        //Add all records to an array
-        $rows = array();
-        while ($row = mysql_fetch_array($result)) {
-            $rows[] = $row;
-        }
-
-        //Return result to jTable
+//        $result = mysql_query("SELECT * FROM people;");
+//
+//        //Add all records to an array
+//        $rows = array();
+//        while ($row = mysql_fetch_array($result)) {
+//            $rows[] = $row;
+//        }
+//
+//        //Return result to jTable
+//        $jTableResult = array();
+//        $jTableResult['Result'] = "OK";
+//        $jTableResult['Records'] = $rows;
+//        print json_encode($jTableResult);
+        $medicine_list = $this->medicine_model->get_all_medicines();
         $jTableResult = array();
         $jTableResult['Result'] = "OK";
-        $jTableResult['Records'] = $rows;
+        $jTableResult['Records'] = $medicine_list;
         print json_encode($jTableResult);
     }
 
     function add_medicine() {
-        //Insert record into database
-        $result = mysql_query("INSERT INTO people(Name, Age, RecordDate) VALUES('" . $_POST["Name"] . "', " . $_POST["Age"] . ",now());");
-
-        //Get last inserted record (to return to jTable)
-        $result = mysql_query("SELECT * FROM people WHERE PersonId = LAST_INSERT_ID();");
-        $row = mysql_fetch_array($result);
-
-        //Return result to jTable
-        $jTableResult = array();
+        $medicine_list = $this->medicine_model->add_medicine_to_prescription();
         $jTableResult['Result'] = "OK";
-        $jTableResult['Record'] = $row;
+        $jTableResult['Record'] = $medicine_list;
         print json_encode($jTableResult);
     }
 
     function update_medicine() {
-        //Update record in database
-        $result = mysql_query("UPDATE people SET Name = '" . $_POST["Name"] . "', Age = " . $_POST["Age"] . " WHERE PersonId = " . $_POST["PersonId"] . ";");
-
-        //Return result to jTable
         $jTableResult = array();
-        $jTableResult['Result'] = "OK";
+        if ($this->medicine_model->update_medicine_information()) {
+            $jTableResult['Result'] = "OK";
+        } else {
+            $jTableResult['Result'] = "ERROR";
+        }
         print json_encode($jTableResult);
     }
-
+    
+    
     function delete_medicine() {
         //Delete from database
-        $result = mysql_query("DELETE FROM people WHERE PersonId = " . $_POST["PersonId"] . ";");
+//        $result = mysql_query("DELETE FROM people WHERE PersonId = " . $_POST["PersonId"] . ";");
         //Return result to jTable
         $jTableResult = array();
-        $jTableResult['Result'] = "OK";
+        if($this->medicine_model->delete_medicine_from_prescription()){
+            $jTableResult['Result'] = "OK";
+        }else{
+            $jTableResult['Result'] = "ERROR";
+        }
+        
         print json_encode($jTableResult);
     }
 
