@@ -26,7 +26,6 @@ class Doctor extends CI_Controller {
         var_dump($exp);
         die;
     }
-    
 
     function get_prescription() {
         if ($this->input->post()) {
@@ -35,23 +34,22 @@ class Doctor extends CI_Controller {
 //            echo $data->patient_id;
             $prescription_data = array(
                 array(
-                    "patient_name" => "Anik Hasan" , 
-                    "prescription_id" => 2 , 
-                    "prescription_title" => "prescription for fever" , 
+                    "patient_name" => "Anik Hasan",
+                    "prescription_id" => 2,
+                    "prescription_title" => "prescription for fever",
                     "date" => '2-12-2012',
-                    "types" => array('cancer' , 'fever')),
+                    "types" => array('cancer', 'fever')),
                 array(
-                    "patient_name" => "Anik Hasan" , 
-                    "prescription_id" => 4 , 
-                    "prescription_title" => "prescription for Headache" , 
+                    "patient_name" => "Anik Hasan",
+                    "prescription_id" => 4,
+                    "prescription_title" => "prescription for Headache",
                     "date" => '2-12-2012',
-                    "types" => array('cancer' , 'tumor')),
+                    "types" => array('cancer', 'tumor')),
             );
             echo (json_encode($prescription_data));
         }
     }
-    
-    
+
     /**
      * Gets the  
      */
@@ -73,38 +71,69 @@ class Doctor extends CI_Controller {
         }
     }
 
-    function load_prescription() {
-        echo 'This is application form';
+    function add_prescription() {
+        $prescripton_data = $this->input->post("prescription_data");
+        $data = json_decode($prescripton_data);
+        $title = $data->title;
+        $patient_id = $data->id;
+        $this->load->model("doctor_model");
+        $prescription_id = $this->doctor_model->add_prescription($this->session->userdata('id'), $patient_id, $title);
+        $tags = $data->tagList;
+        $this->doctor_model->add_tags($tags, $prescription_id);
+        echo $prescription_id;
     }
 
-    function load_medicine_test() {
-        echo 'This is medical test form';
+    
+    
+    
+    function medicineList() {
+        $result = mysql_query("SELECT * FROM people;");
+
+        //Add all records to an array
+        $rows = array();
+        while ($row = mysql_fetch_array($result)) {
+            $rows[] = $row;
+        }
+
+        //Return result to jTable
+        $jTableResult = array();
+        $jTableResult['Result'] = "OK";
+        $jTableResult['Records'] = $rows;
+        print json_encode($jTableResult);
     }
 
-    function load_account() {
-        echo 'This is account form';
+    function add_medicine() {
+        //Insert record into database
+        $result = mysql_query("INSERT INTO people(Name, Age, RecordDate) VALUES('" . $_POST["Name"] . "', " . $_POST["Age"] . ",now());");
+
+        //Get last inserted record (to return to jTable)
+        $result = mysql_query("SELECT * FROM people WHERE PersonId = LAST_INSERT_ID();");
+        $row = mysql_fetch_array($result);
+
+        //Return result to jTable
+        $jTableResult = array();
+        $jTableResult['Result'] = "OK";
+        $jTableResult['Record'] = $row;
+        print json_encode($jTableResult);
     }
 
-    function prescription() {
-        $this->load->model('doctor_model');
-        $result = $this->doctor_model->get_all_people();
-        echo json_encode($result);
+    function update_medicine() {
+        //Update record in database
+        $result = mysql_query("UPDATE people SET Name = '" . $_POST["Name"] . "', Age = " . $_POST["Age"] . " WHERE PersonId = " . $_POST["PersonId"] . ";");
+
+        //Return result to jTable
+        $jTableResult = array();
+        $jTableResult['Result'] = "OK";
+        print json_encode($jTableResult);
     }
 
-    function update_entry() {
-        
-    }
-
-    function delete_entry() {
-        
-    }
-
-    function delete_patient() {
-        
-    }
-
-    function add_entry() {
-        
+    function delete_medicine() {
+        //Delete from database
+        $result = mysql_query("DELETE FROM people WHERE PersonId = " . $_POST["PersonId"] . ";");
+        //Return result to jTable
+        $jTableResult = array();
+        $jTableResult['Result'] = "OK";
+        print json_encode($jTableResult);
     }
 
 }

@@ -32,7 +32,7 @@ class Doctor_model extends CI_Model {
         $jTableResult['Records'] = $rows;
         return $jTableResult;
     }
-    
+
     /**
      * For the given key returns the list of patient in format, id, Name, address, phone
      * @param type input field from UI
@@ -46,7 +46,7 @@ class Doctor_model extends CI_Model {
         $query = $this->db->get('patients')->result_array();
         return $query;
     }
-    
+
     /**
      * For the given key, reutrns the list of types in the format id, name
      * @param type input field from the UI
@@ -60,44 +60,24 @@ class Doctor_model extends CI_Model {
         $query = $this->db->get('type')->result_array();
         return $query;
     }
-    function decorate($k){
-	    return "'".$k."'";
-	    
+
+    function decorate($k) {
+        return "'" . $k . "'";
     }
-    
-    
-    function get_prescription( $patient_id, $type){	    	    
-		    $data = array();
-	    foreach ($type as $key => $value) {
-			    $data[] = $this->decorate($value);
-			    
-	    }
-	    
-	    $exp = implode(",", $data);
-	    
-//	    return $type;
-//	   $query = $this->db->query(
-//	   	    
-//			'SELECT pat.name as patient_name, p.prescription_id, p.pres_date, type.name as type
-//			FROM prescription AS p
-//			JOIN prescription_type AS pt ON p.prescription_id = pt.prescription_id
-//			JOIN patients AS pat ON p.patient_id = pat.patient_id
-//			JOIN TYPE ON pt.type_id = type.type_id
-//			WHERE pt.type_id
-//			IN (
-//
-//			SELECT type_id
-//			FROM TYPE WHERE name in  ("'.$type.'")
-//			)
-//			AND pat.patient_id =  '.$patient_id.'
-//			LIMIT 0 , 30');
 
-	   
+    function get_prescription($patient_id, $type) {
+        $data = array();
+        foreach ($type as $key => $value) {
+            $data[] = $this->decorate($value);
+        }
 
-	    
-	    
-	    
-$sql = "SELECT pat.name as patient_name, p.prescription_id, p.pres_date, type.name as type
+        $exp = implode(",", $data);
+
+
+
+
+
+        $sql = "SELECT pat.name as patient_name, p.prescription_id, p.pres_date, type.name as type
 			FROM prescription AS p
 			JOIN prescription_type AS pt ON p.prescription_id = pt.prescription_id
 			JOIN patients AS pat ON p.patient_id = pat.patient_id
@@ -106,30 +86,29 @@ $sql = "SELECT pat.name as patient_name, p.prescription_id, p.pres_date, type.na
 			IN (
 
 			SELECT type_id
-			FROM TYPE WHERE name in (".$exp.")
+			FROM TYPE WHERE name in (" . $exp . ")
 			)
 			AND pat.patient_id =  '6'
 			LIMIT 0 , 30";
 
-	   
-	   $query = $this->db->query($sql);
-	   $b = $query->result_array();
-	   
-	   
-	   return $b;
-	   
+
+        $query = $this->db->query($sql);
+        $b = $query->result_array();
+
+
+        return $b;
     }
-    
-    function hack($t){
-	    var_dump($t);
+
+    function hack($t) {
+        var_dump($t);
     }
-    
-    
-    function make_string( $type){
-	    	    
-	    $string = implode(", ", $type);
-	    return $string;
-    }    
+
+    function make_string($type) {
+
+        $string = implode(", ", $type);
+        return $string;
+    }
+
 }
 
 ?>
