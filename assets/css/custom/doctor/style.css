@@ -14,7 +14,6 @@ body {
 	min-height: 200px;
 }
 
-
 /*top bar design*/
 .heading {
 	background: #115293;
@@ -23,70 +22,91 @@ body {
 	border-radius: 13px;
 }
 
-.heading ul{
+.heading ul {
 	list-style: none;
-	margin-right:20px;
+	margin-right: 20px;
 	color: white;
 }
 
-.heading li{
+.heading li {
 	font-family: 'Trocchi', serif;
 	margin-top: 10px;
-	font-weight:400;
-	padding-left:10px;
+	font-weight: 400;
+	padding-left: 10px;
 	padding-right: 10px;
 	float: right;
 }
 
-.heading li a{
+.heading li a {
 	text-decoration: none;
 	color: white;
 }
 
-.heading li:hover, .heading li a:hover{
+.heading li:hover, .heading li a:hover {
 	cursor: pointer;
 	color: #89adef;
 }
 
 /*top bar design*/
 
-.main_content{
+.main_content {
 	margin-top: 50px;
 }
 
 /* Prescription tab's content's styles*/
-.selection{
+.selection {
 	padding: 10px;
 }
 
 .selection label {
-	min-width:100px;
+	min-width: 100px;
 	font-size: 13px;
 }
 
-.selection input{
-	padding:3px;
+.selection input {
+	padding: 3px;
 }
 
-#field{
-	padding:6px;
+#field {
+	padding: 6px;
 }
 
-#search_control{
-	position:relative;
-	float:left;
-	width:600px;
+#search_control {
+	position: relative;
+	float: left;
+	width: 600px;
+}
+
+#profile_and_prescription_div {
+	margin-top: 10px;
+}
+
+#patient_image {
+	margin-top: 10px;
+	padding: 5px;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+	-webkit-background-clip: padding;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+	border: 10px solid #fff;
+	border: 10px solid rgba(255, 255, 255, 0.9);
+	outline: none;
+}
+.no_patient {
+	font-family: 'Monda', sans-serif;
+}
+
+#no_prescription{
+	margin-left: 200px;
+	margin-top: 80px;
+}
+
+#no_prescription_info{
+	margin-top: 8px;
+	margin-left: 22px;
 	
 }
-
-#profile_and_prescription_div{
-	margin-top : 10px;
-}
-
-
-
-
-
 
 
 

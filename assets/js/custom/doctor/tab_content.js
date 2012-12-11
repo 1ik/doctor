@@ -1,4 +1,17 @@
+function nopatient() {
+	$('#patient_image').html('<img src = "http://localhost/doctor/assets/imgs/profile/patients/default.jpg"/>');
+	$('#patient_information').html('<p class = "no_patient">No Patient Selected</p>');
+}
+
+
+
+
+
 $(document).ready(function() {
+	nopatient();
+	
+	
+	
 	$('#find_prescription').click(function(){
 		var taglist = $("#disease_type_search").tagit("tags");
 		var tags = jQuery.map(taglist , function(obj, index){
