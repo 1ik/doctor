@@ -51,6 +51,7 @@ body {
 
 .main_content {
 	margin-top: 50px;
+	margin-bottom: 200px;
 }
 
 /* Prescription tab's content's styles*/
@@ -82,6 +83,8 @@ body {
 }
 
 #patient_image {
+	min-width:121px;
+	min-height:141px;
 	margin-top: 10px;
 	padding: 5px;
 	background-color: #fff;
@@ -93,6 +96,11 @@ body {
 	border: 10px solid rgba(255, 255, 255, 0.9);
 	outline: none;
 }
+#patient_image img{
+	margin-left : 5px;
+}
+
+
 .no_patient {
 	font-family: 'Monda', sans-serif;
 }
@@ -105,6 +113,17 @@ body {
 #no_prescription_info{
 	margin-top: 8px;
 	margin-left: 22px;
+	
+}
+
+#prescription_div{
+	margin-bottom: 50px;
+}
+
+#add_medicine{
+	margin-left:100px;
+}
+#delete_medicine{
 	
 }
 

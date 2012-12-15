@@ -12,53 +12,153 @@ $(document).ready(function() {
 		});
 		$('#prescription_image').html('<img id="prescription_icon" width="50px" height="80px" src="http://localhost/doctor/assets/imgs/prescription.png") />');
 	});
-	
-	
+
+	$('#patient_id').keyup(function(event) {
+		if ($('#patient_id').val() == "") {
+			nopatient();
+			return;
+		}
+
+		if (event.keyCode != 13) {
+			$("#patient_information > span").html('');
+			$('#patient_image').html('<img style="margin-left: 50px; margin-top: 50px" src = "http://localhost/doctor/assets/imgs/ajax-loader.gif"/>');
+		}
+	});
 
 	$('#no_prescription_info').click(function() {
+		var patient_id = $('#patient_id').val();
+		if (patient_id.length == 0) {
+			alert("Please Select a Patient");
+			return;
+		}
 
-		$('#prescription_div_container').html('<div class="grid_15" id="prescription_div"> <div id="PeopleTableContainer" style="width: 600px;"></div> </div>');
-
-		$('#PeopleTableContainer').jtable({
-			title : 'Table of people',
-			actions : {
-				listAction : 'http://localhost/doctor/profile/doctor/medicineList',
-				createAction : 'http://localhost/doctor/profile/doctor/add_medicine',
-				updateAction : 'http://localhost/doctor/profile/doctor/update_medicine',
-				deleteAction : 'http://localhost/doctor/profile/doctor/delete_medicine'
-			},
-			fields : {
-				PersonId : {
-					key : true,
-					create : false,
-					edit : false,
-					list : false
-				},
-				Name : {
-					title : 'Author Name',
-					width : '20%'
-				},
-				Age : {
-					title : 'Age',
-					width : '20%'
-				},
-				RecordDate : {
-					title : 'Record date',
-					width : '30%',
-					type : 'date',
-					create : false,
-					edit : false
-				},
-				pokpok : {
-					title : 'Pok Pok',
-					width : '30%'
-				}
-			}
+		var tags = jQuery.map($("#disease_type").tagit("tags"), function(obj, index) {
+			return obj.value;
 		});
 
-		//Load person list from server
-		$('#PeopleTableContainer').jtable('load');
+		if (tags.length == 0) {
+			alert("Please Select Disease type for Patient.");
+			return;
+		}
 
+		var prescription_title = $('#prescription_title').val();
+		if (prescription_title.length < 10) {
+			alert('please give a valid prescription title with a minimum length 10');
+			return;
+		}
+
+		// alert("we are now ready to proceed");
+		// return;
+
+		/* SENDING AJAX REQUEST FOR MAKING A NEW PRESCRIPTION*/
+
+		$.ajax({
+			url : 'doctor/add_prescription',
+			type : "post",
+			data : {
+				tagList : tags,
+				title : prescription_title,
+				id : patient_id
+			},
+			success : function(response) {
+				$('#prescription_div_container').html('<div class="grid_15" id="prescription_div"> <div id="PeopleTableContainer" style="width: 600px;"></div> </div> ');
+				$('#prescription_div_container').append('<div class="grid_15 id="prescription_controle_div"> <input id="add_medicine" type="button" value = "add new medicine" /> <input id="del_prescription" type="button" onClick = "document.location.reload(true)" value = "Delete Prescription" /> </div>');
+
+				$('#add_medicine').button({
+				});
+
+				$('#del_prescription').button({
+				});
+				
+				$('#del_prescription').click(function(){
+					ajax({
+						url:'doctor/delete_prescription',
+						type : "post",
+						success:function(data){
+							document.location.reload(true);
+						}
+					});
+				});
+				
+
+				$('#PeopleTableContainer').jtable({
+					title : 'Table of people',
+					deleteConfirm : true,
+					paging : true,
+					pageSize : 2,
+					selecting : true,
+					selectingCheckboxes : true,
+					selectOnRowClick : true,
+					deleteConfirmMessege : "Are you sure that you want to delete this entry?",
+					addRecordButton : $('#add_medicine'),
+					actions : {
+						listAction : 'http://localhost/doctor/profile/doctor/medicineList',
+						createAction : 'http://localhost/doctor/profile/doctor/add_medicine',
+						updateAction : 'http://localhost/doctor/profile/doctor/update_medicine',
+						deleteAction : 'http://localhost/doctor/profile/doctor/delete_medicine'
+					},
+					formCreated : function(event, data){
+						$(".medicine_name").autocomplete({
+		// source: [{label : "Anik Hasan" , value : "anik"}, {label : 'Dipankar Chaki Joy' , value : "joy"} , {label : "Fahim Al Hasnaeen" , value : "fahim"}]
+							source : function(request, response) {
+								$.ajax({
+									url : "doctor/ajax_medicinelist",
+									type : "post",
+									data : {
+										key : request.term
+									},
+									success : function(data) {
+										obj = jQuery.parseJSON(data);
+										response($.map(obj, function(item) {
+											return {
+												label : item.medicine_name + "_" + item.company  +"_"+ item.power,
+												value : item.medicine_name + "_" + item.company  +"_"+ item.power
+											}
+										}));
+									}
+								});
+							},
+					
+							select : function(event, ui) {
+								//$('#pat_name').html("<label > Patient Name : " + ui.item.Name + "</label>");
+							}
+						});
+					},
+					fields : {
+						medicine_name : {
+							title : 'Name',
+							width : '17%',
+							inputClass : "medicine_name"
+						},
+						For : {
+							title : 'For',
+							width : '20%'
+						},
+						Does : {
+							title : 'Does',
+							width : '26%'
+						},
+						Duration : {
+							title : 'Duration',
+							width : '13%',
+							type : 'text',
+						},
+
+						comment : {
+							title : 'Comment about medicine',
+							type : 'textarea',
+							edit : true,
+							list : false,
+							display : false,
+						}
+
+					}
+				});
+
+				//Load person list from server
+				$('#PeopleTableContainer').jtable('load');
+			}
+		});
 	});
 
 	//Prepare jTable
@@ -70,139 +170,5 @@ $(document).ready(function() {
 			return $('#prescription_title').val();
 		}
 	}
-
-
-	$('#submit').click(function() {
-
-	});
-
-	/*
-
-	 $('#PeopleTableContainer').jtable({
-	 title : give_title(),
-	 actions : {
-	 listAction : 'http://localhost/doctor/profile/doctor/medicineList',
-	 createAction : 'http://localhost/doctor/profile/doctor/add_medicine',
-	 updateAction : 'http://localhost/jtable/Codes/PersonActions.php?action=update',
-	 deleteAction : 'http://localhost/jtable/Codes/PersonActions.php?action=delete'
-	 },
-	 fields : {
-	 medicine_id : {
-	 width : '4%',
-	 title : "ID",
-	 create : false,
-	 key : true,
-	 edit : false,
-	 list : true
-	 },
-	 medicine_name : {
-	 title : 'Medicine Name',
-	 width : '15%',
-	 input : function(data) {
-	 if (data.record) {
-	 return '<input name = "medicine_name" type="text" id="medicine_name" style="width:200px" value="' + data.record.medicine_name + '" />';
-	 } else {
-	 return '<input name = "medicine_name" type="text" style="width:200px" placeholder="enter your name here" />';
-	 }
-	 }
-	 },
-	 For : {
-	 title : 'For',
-	 width : '10%',
-	 input : function(data) {
-	 if (data.record) {
-	 return '<input name = "medicine_for" type="text" id="medicine_for" style="width:200px" value="' + data.record.For + '" />';
-	 } else {
-	 return '<input name = "medicine_for" type="text" style="width:200px" placeholder="" />';
-	 }
-	 }
-	 },
-	 Dose : {
-	 title : 'Dose',
-	 width : '5%',
-	 input : function(data) {
-	 if (data.record) {
-	 return '<input name = "medicine_dose" type="text" id="medicine_dose" style="width:200px" value="' + data.record.Dose + '" />';
-	 } else {
-	 return '<input name = "medicine_dose" type="text" style="width:200px" placeholder="e.g. 25mg" />';
-	 }
-	 }
-	 },
-
-	 Duration : {
-	 title : 'Duration',
-	 width : '5%',
-	 input : function(data) {
-	 if (data.record) {
-	 return '<input name = "medicine_duration" type="text" id="medicine_duration" style="width:200px" value="' + data.record.Duration + '" />';
-	 } else {
-	 return '<input name = "medicine_duration" type="text" style="width:200px" placeholder="e.g. 4 days" />';
-	 }
-	 }
-	 },
-
-	 company : {
-	 title : 'company',
-	 width : '5%',
-	 input : function(data) {
-	 if (data.record) {
-	 return '<input name = "medicine_company" type="text" id="medicine_company" style="width:200px" value="' + data.record.company + '" />';
-	 } else {
-	 return '<input name = "medicine_company" type="text" style="width:200px" placeholder="e.g. Beximco" />';
-	 }
-	 }
-	 },
-	 comment : {
-	 title : 'Comment about medicine',
-	 width : '7%',
-	 type : 'textarea',
-	 edit : true,
-	 list : false,
-	 display : false,
-	 }	 }
-	 });
-
-	 //Load person list from server
-	 $('#PeopleTableContainer').jtable('load');
-
-	 // $('#PeopleTableContainer').jtable({
-	 // title : give_title(),
-	 // dialogShowEffect : 'bounce',
-	 // actions : {
-	 // listAction : 'http://localhost/doctor/profile/doctor/medicineList',
-	 // createAction : 'http://localhost/ci_jtable/jtable/records',
-	 // updateAction : 'http://localhost/jtable/Codes/PersonActions.php?action=update',
-	 // deleteAction : 'http://localhost/jtable/Codes/PersonActions.php?action=delete'
-	 // },
-	 // fields : {
-	 //
-
-	 //
-
-	 //
-	 // company : {
-	 // title : 'company',
-	 // width : '5%',
-	 // input : function(data) {
-	 // if (data.record) {
-	 // return '<input name = "medicine_company" type="text" id="medicine_company" style="width:200px" value="' + data.record.company + '" />';
-	 // } else {
-	 // return '<input name = "medicine_company" type="text" style="width:200px" placeholder="e.g. Beximco" />';
-	 // }
-	 // }
-	 // },
-	 //
-	 // comment : {
-	 // title : 'Comment about medicine',
-	 // width : '7%',
-	 // type : 'textarea',
-	 // edit : true,
-	 // list : false,
-	 // display : false,
-	 // }
-	 // }
-	 // });
-	 //
-	 // ('#PeopleTableContainer').jtable('load');	 */
 
 });

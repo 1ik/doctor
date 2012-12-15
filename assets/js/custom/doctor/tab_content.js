@@ -4,13 +4,8 @@ function nopatient() {
 }
 
 
-
-
-
 $(document).ready(function() {
 	nopatient();
-	
-	
 	
 	$('#find_prescription').click(function(){
 		var taglist = $("#disease_type_search").tagit("tags");
@@ -54,9 +49,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#submit').button({
-		label : "Generate Prescription"
-	});
+
 
 	//patient id autocomplete..
 	$("#patient_id").autocomplete({
@@ -72,6 +65,7 @@ $(document).ready(function() {
 					obj = jQuery.parseJSON(data);
 					response($.map(obj, function(item) {
 						return {
+							info : item,
 							Name : item.Name,
 							label : item.Name + " " + item.address + " " + item.phone,
 							value : item.id
@@ -82,9 +76,20 @@ $(document).ready(function() {
 		},
 
 		select : function(event, ui) {
-			$('#pat_name').html("<label > Patient Name : " + ui.item.Name + "</label>");
+		
+			$('#patient_information')
+			.html('<span  id="patient_name"> </span> <span id="patient_age"> </span><br/> <span id="patient_blood_group"></span><br /> <span id="patient_phone"></span><br /> <span id="patient_email"></span><br /> <span id="patient_address"></span><br />');
+			var patient = ui.item.info;
+			$('#patient_image').html('<img src="' + patient.image_url + '"/>');
+			$('#patient_name').html('<p>' + patient.Name + '</p>');
+			$('#patient_age').html("Age : " + patient.age);
+			$('#patient_blood_group').html("Blood Group : " + patient.blood_group);
+			$('#patient_phone').html("Mobile : " + patient.phone);
+			$('#patient_email').html("Email : " + patient.patient_email);
+			$('#patient_address').html(patient.address);
 		}
 	});
+	
 	// patient id autocomplete..... //
 
 	/*serch tab's contents */

@@ -39,12 +39,11 @@ class Doctor_model extends CI_Model {
      * @return type 
      */
     function get_patient_autocomplete($key) {
-
-        $this->db->select("patient_id as id, name AS Name, address, phone");
-        $this->db->like('name', $key);
-
-        $query = $this->db->get('patients')->result_array();
-        return $query;
+        $base_url = base_url() . 'assets/imgs/profile/patients/';
+        $sql = "select patient_id as id, age, name as Name, address, patient_email, blood_group,  phone, CONCAT('" . $base_url . "' , image_url) as image_url from patients where name like '%" . $key . "%'";
+        $query_result = $this->db->query($sql);
+        $result_array = $query_result->result_array();
+        return $result_array;
     }
 
     /**
@@ -72,11 +71,6 @@ class Doctor_model extends CI_Model {
         }
 
         $exp = implode(",", $data);
-
-
-
-
-
         $sql = "SELECT pat.name as patient_name, p.prescription_id, p.pres_date, type.name as type
 			FROM prescription AS p
 			JOIN prescription_type AS pt ON p.prescription_id = pt.prescription_id
@@ -90,12 +84,8 @@ class Doctor_model extends CI_Model {
 			)
 			AND pat.patient_id =  '6'
 			LIMIT 0 , 30";
-
-
         $query = $this->db->query($sql);
         $b = $query->result_array();
-
-
         return $b;
     }
 
@@ -104,9 +94,24 @@ class Doctor_model extends CI_Model {
     }
 
     function make_string($type) {
-
         $string = implode(", ", $type);
         return $string;
+    }
+
+    /*WORKING!!!*/
+    function add_prescription($doctor_id, $patient_id, $prescription_title) {
+        $time = date('Y-m-d H:i:s');
+        $data = array('doctor_id' => $doctor_id, 'patient_id' => $patient_id, 'title' => $prescription_title, 'pres_date' => $time);
+        $this->db->insert('prescription', $data);
+        return $this->db->insert_id();
+    }
+    
+    /*WORKING!!!*/
+    function add_tags($tags , $prescription_id){
+        foreach ($tags as $tag ) {
+            $sql = "INSERT INTO `doctors_project`.`prescription_type` (`prescription_id`, `type_id`, `description`) VALUES (".$prescription_id.", (SELECT type_id FROM type WHERE type.name = '".$tag."') , '');";
+            $this->db->query($sql);
+        }
     }
 
 }

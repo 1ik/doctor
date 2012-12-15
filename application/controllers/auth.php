@@ -18,73 +18,62 @@ class Auth extends CI_Controller {
     }
 
     function index() {
-        if($this->_logged_in('doctor')){
+        if ($this->_logged_in('doctor')) {
             redirect('profile/doctor');
-        }else if($this->_logged_in('patient')){
+        } else if ($this->_logged_in('patient')) {
             redirect('profile/patient');
         }
         $this->_load_view();
     }
 
-    
     function signup() {
-        if($this->input->post()){
+        if ($this->input->post()) {
             $captcha = $this->input->post('captcha');
-            if(spam_check_answer($captcha)){
+            if (spam_check_answer($captcha)) {
                 $this->load->model('auth_model');
-                if($this->auth_model->add_user() == true){
+                if ($this->auth_model->add_user() == true) {
                     echo 'sign up successful';
-                }else{
+                } else {
                     $this->_load_view();
                 }
-            }else{
+            } else {
                 $data['captcha_error'] = 'You entered a wrong answer';
                 $this->_load_view($data);
             }
-        }else{
+        } else {
             $this->_load_view();
         }
     }
-    
-    
 
-    
     function _load_view($data = array()) {
         $captcha = get_spam_check();
         $data['captcha_question'] = $captcha[0];
         $this->load->view('template/header', $data);
         $this->load->view('home');
         $this->load->view('template/footer', $data);
-        
     }
-    
-    
-    
-    
-    function user_login(){
+
+    function user_login() {
         $this->load->model('auth_model');
-        if($this->auth_model->authenticate()){
+        if ($this->auth_model->authenticate()) {
             $data['logged_in'] = TRUE;
             $data['as'] = $this->input->post('as');
+            $data['id'] = $this->auth_model->get_id($this->input->post('login_email'), $data['as']);
             $this->session->set_userdata($data);
             redirect('');
-        }else{
+        } else {
             $data['login_failed'] = "The email and password you provided, didn't match";
             $this->_load_view($data);
         }
     }
-    
-    function user_logout(){
-        if($this->_logged_in()){
+
+    function user_logout() {
+        if ($this->_logged_in()) {
             $this->session->sess_destroy();
         }
         redirect('');
     }
-    
-    
-    
-    
-    
+
     function _logged_in($as = '') {
 
         if ($as == '') {

@@ -27,33 +27,51 @@ class Doctor extends CI_Controller {
         var_dump($exp);
         die;
     }
-
-    function get_prescription() {
-        if ($this->input->post()) {
-            $json_data = $this->input->post("info");
-            $data = json_decode($json_data);
-//            echo $data->patient_id;
-            $prescription_data = array(
-                array(
-                    "patient_name" => "Anik Hasan",
-                    "prescription_id" => 2,
-                    "prescription_title" => "prescription for fever",
-                    "date" => '2-12-2012',
-                    "types" => array('cancer', 'fever')),
-                array(
-                    "patient_name" => "Anik Hasan",
-                    "prescription_id" => 4,
-                    "prescription_title" => "prescription for Headache",
-                    "date" => '2-12-2012',
-                    "types" => array('cancer', 'tumor')),
-            );
-            echo (json_encode($prescription_data));
-        }
+    
+    function ajax_medicinelist(){
+        $data[] = array('medicine_name' => 'antazol' , 'company' => 'beximco' , 'power' => '25mg');
+        $data[] = array('medicine_name' => 'alatrol' , 'company' => 'Acme' , 'power' => '65mg');
+        $data[] = array('medicine_name' => 'antacid plus' , 'company' => 'beximco' , 'power' => '100mg');
+        $data[] = array('medicine_name' => 'Napa' , 'company' => 'Orion' , 'power' => '30mg');
+        $data[] = array('medicine_name' => 'Naprox' , 'company' => 'ACI' , 'power' => '500mg');
+        echo json_encode($data);
+        
     }
 
+
+
+
+
+
+    /*WORKING!!*/
+    function add_prescription() {
+        return;
+        if ($this->input->post()) {
+            $tag_array = $this->input->post("tagList");
+            $patient_id = $this->input->post("id");
+            $prescription_title = $this->input->post("title");
+            $this->load->model("doctor_model");
+            $prescription_id = $this->doctor_model->add_prescription($this->session->userdata('id'), $patient_id, $prescription_title);
+            $tags = $tag_array;
+            $this->doctor_model->add_tags($tags, $prescription_id);
+        }
+    }
+    
+    function delete_prescription(){
+        $prescription_id = $this->session->userdata('cur_prescip_id');
+        //now clean datas in the table which are related to this prescription id.
+        //Then delete the prescription which has this id in the prescription table.
+        //then unset prescription related userdata from prescription..
+        $data = array('cur_prescrip_id' , 'cur_patient_id');
+        $this->session->unset_userdata($data);
+        
+        
+    }
+    
     /**
      * Gets the  
      */
+    /*WORKING!!*/
     function patients() {
         if ($this->input->post()) {
             $key = $this->input->post("key");
@@ -63,7 +81,8 @@ class Doctor extends CI_Controller {
             show_404();
         }
     }
-
+    
+    /*WORKING!!*/
     function disease_types() {
         if ($this->input->post()) {
             $key = $this->input->post("key");
@@ -71,48 +90,49 @@ class Doctor extends CI_Controller {
             echo json_encode($type);
         }
     }
+    
+      /**PREVIOUS WORKING VERSION OF PRESCRIPTION ADDING FUNCTION**/
+//    function add_prescription() {
+//        $prescripton_data = $this->input->post("prescription_data");
+//        $data = json_decode($prescripton_data);
+//        $title = $data->title;
+//        $patient_id = $data->id;
+//        $this->load->model("doctor_model");
+//        $prescription_id = $this->doctor_model->add_prescription($this->session->userdata('id'), $patient_id, $title);
+//        $tags = $data->tagList;
+//        $this->doctor_model->add_tags($tags, $prescription_id);
+//        $data['cur_patient_id'] = $patient_id;
+//        $data['cur_prescip_id'] = $prescription_id;
+//        $this->session->set_userdata($data);
+//    }
+    
 
-    function add_prescription() {
-        $prescripton_data = $this->input->post("prescription_data");
-        $data = json_decode($prescripton_data);
-        $title = $data->title;
-        $patient_id = $data->id;
-        $this->load->model("doctor_model");
-        $prescription_id = $this->doctor_model->add_prescription($this->session->userdata('id'), $patient_id, $title);
-        $tags = $data->tagList;
-        $this->doctor_model->add_tags($tags, $prescription_id);
-        echo $prescription_id;
-    }
-
-    function medicineList() {
-//        $result = mysql_query("SELECT * FROM people;");
-//
-//        //Add all records to an array
-//        $rows = array();
-//        while ($row = mysql_fetch_array($result)) {
-//            $rows[] = $row;
-//        }
-//
-//        //Return result to jTable
-//        $jTableResult = array();
-//        $jTableResult['Result'] = "OK";
-//        $jTableResult['Records'] = $rows;
-//        print json_encode($jTableResult);
+    /*working demo of listing medicines...*/
+   /* function medicineList() {
         $medicine_list = $this->medicine_model->get_all_medicines();
         $jTableResult = array();
         $jTableResult['Result'] = "OK";
         $jTableResult['Records'] = $medicine_list;
         print json_encode($jTableResult);
-    }
+    } */
+    
+    function medicineList(){
+        $this->load->model('medicine_model');
+        $prescription = array();
+        $prescription["Result"] = "OK";
+        $prescription["Records"] = $this->medicine_model->get_all_medicines();
+        
+//        print json_encode($prescription); <-- This should print data in the following printed format. go to get_all_medicines() to complete this function. make sure it is printing the data in the given format.
 
-    function add_medicine() {
-        $medicine_list = $this->medicine_model->add_medicine_to_prescription();
-        $jTableResult['Result'] = "OK";
-        $jTableResult['Record'] = $medicine_list;
-        print json_encode($jTableResult);
+        echo '{"TotalRecordCount" : "4", "Result" : "OK", "Records":[
+            {"medicine_name":"antazol","For":"Hachchi","Does":"2 times a week","Duration":"1 week","comment":"Stop having this if Hachchi is gone"},
+            {"medicine_name":"Napa","For":"Fever and cough","Does":"morning day night before meal","Duration":"5 Days","comment":"Try to avoid it as much as possible"},
+            {"medicine_name":"tofen","For":"pain in the ear","Does":"only at morning and day before meal","Duration":"2 comment","pokpok":"avoid this if you gas forms."},
+            {"medicine_name":"alatrol","For":"Hachchi and hapani","Does":"before meal at night","Duration":"15 Days","comment":"if you feel pain in back, stop having this and contact me"}]}';
     }
-
-    function update_medicine() {
+    
+    
+     function update_medicine() {
         $jTableResult = array();
         if ($this->medicine_model->update_medicine_information()) {
             $jTableResult['Result'] = "OK";
@@ -121,12 +141,28 @@ class Doctor extends CI_Controller {
         }
         print json_encode($jTableResult);
     }
+
+    
+    function add_medicine() {
+        $medicine_list = $this->medicine_model->add_medicine_to_prescription();
+        $jTableResult['Result'] = "OK";
+        $jTableResult['Record'] = $medicine_list;
+        print json_encode($jTableResult);
+    }
+    
+/**  working demo for jTable */
+//    function update_medicine() {
+//        $jTableResult = array();
+//        if ($this->medicine_model->update_medicine_information()) {
+//            $jTableResult['Result'] = "OK";
+//        } else {
+//            $jTableResult['Result'] = "ERROR";
+//        }
+//        print json_encode($jTableResult);
+//    }
     
     
     function delete_medicine() {
-        //Delete from database
-//        $result = mysql_query("DELETE FROM people WHERE PersonId = " . $_POST["PersonId"] . ";");
-        //Return result to jTable
         $jTableResult = array();
         if($this->medicine_model->delete_medicine_from_prescription()){
             $jTableResult['Result'] = "OK";
@@ -136,7 +172,6 @@ class Doctor extends CI_Controller {
         
         print json_encode($jTableResult);
     }
-
 }
 
 ?>

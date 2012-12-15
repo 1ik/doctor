@@ -74,104 +74,103 @@
 								<br />
 								<input type="text" id="prescription_title" class="" name = "prescription_title" size="50" />
 							</div>
+							<!-- prescription title div ends -->
 
 							<div class="grid_22" id="disease_type_div">
 								<label> Disease Types : </label>
 								<ul id="disease_type" data-name="disease_type"></ul>
 							</div>
 
-							<div class="grid_6" id="patient_profile_div" >
-								<div id="patient_profile_div">
-									<div id="patient_image" class="grid_4"/>
-									<img src="<?php echo site_url('assets/imgs/profile/patients/default.jpg'); ?>" />
+							<div class="grid_6" id="patient_section_div" >
+								<div id="patient_image" class="grid_4">
+
 								</div>
 								<div id="patient_information" class="grid_6">
 
 								</div>
 
-							</div>
-
-							<div id="patient_search_div">
-								<input class="ui-autocomplete-input" placeholder="search for patient" type="text" id="patient_id" size="16" />
-							</div>
-						</div>
-
-						<div class="grid_15" id="prescription_div_container">
-							
-							<div id="no_prescription" class="grid_14">
-								<div id="prescription_image" class="grid_1">
-									<img id="prescription_icon" width="50px" height="80px" src="<?php echo site_url('assets/imgs/prescription.png'); ?>" />
-								</div>
-								<div class="grid_9" id="no_prescription_info">
-									<h3> Issue Prescription</h3>
+								<div id="patient_search_div" class="grid_5">
+									<input class="ui-autocomplete-input" placeholder="search for patient" type="text" id="patient_id" size="16" />
 								</div>
 							</div>
-							
-						</div>
+							<!-- patient section div ends -->
 
-						<div class="grid_23" id="input_type_div">
-							<input type="button" name="submit" id="submit" value="" />
-						</div>
-						
-					</div>
+							<div class="grid_15" id="prescription_div_container">
 
-				</div>
+								<div id="no_prescription" class="grid_14">
+									<div id="prescription_image" class="grid_1">
+										<img id="prescription_icon" width="50px" height="80px" src="<?php echo site_url('assets/imgs/prescription.png'); ?>" />
+									</div>
+									<div class="grid_9" id="no_prescription_info">
+										<h3> Issue Prescription</h3>
+									</div>
+								</div>
+								<!-- no prescription div ends -->
 
-				<div id="tab1">
-
-				</div>
-
-				<div id="tab2">
-
-				</div>
-
-				<div id="tab3">
-
-					<div id="tab3contents">
-						<div id="search_control">
-							<fieldset>
-								<legend>
-									Having :
-								</legend>
-
-								<label> Medicines : </label>
-								<input type="id" id="medicine_name_having"  />
-								<br/>
-								<label> Tests : </label>
-								<input type="id" id="test_name_having"  />
-							</fieldset>
-
-							<fieldset>
-								<legend>
-									Not Having :
-								</legend>
-
-								<label> Medicines : </label>
-								<input type="id" id="medicine_name_not_having" />
-								<br />
-								<label> Tests : </label>
-								<input type="id" id="test_name_not_having"  />
-							</fieldset>
-
-							<input type="id" id="test_name" placeholder="tests" />
-
-							<ul id="disease_type_search" data-name="disease_type_search"></ul>
-
-							<input type="button" value="show prescriptions" id="find_prescription" />
-						</div>
-
-						<div id="search_person_info" >
-							<input type="text" id="patient_id_search" placeholder="Patient name" />
+							</div>
+							<!-- prescription div container ends -->
 
 						</div>
+						<!-- selection container div ends -->
 
 					</div>
-					<!--tab3 contents end -->
+					<!-- tab 0 ends -->
 
+					<div id="tab1">
+
+					</div>
+
+					<div id="tab2">
+
+					</div>
+
+					<div id="tab3">
+
+						<div id="tab3contents">
+							<div id="search_control">
+								<fieldset>
+									<legend>
+										Having :
+									</legend>
+
+									<label> Medicines : </label>
+									<input type="id" id="medicine_name_having"  />
+									<br/>
+									<label> Tests : </label>
+									<input type="id" id="test_name_having"  />
+								</fieldset>
+
+								<fieldset>
+									<legend>
+										Not Having :
+									</legend>
+
+									<label> Medicines : </label>
+									<input type="id" id="medicine_name_not_having" />
+									<br />
+									<label> Tests : </label>
+									<input type="id" id="test_name_not_having"  />
+								</fieldset>
+
+								<input type="id" id="test_name" placeholder="tests" />
+
+								<ul id="disease_type_search" data-name="disease_type_search"></ul>
+
+								<input type="button" value="show prescriptions" id="find_prescription" />
+							</div>
+
+							<div id="search_person_info" >
+								<input type="text" id="patient_id_search" placeholder="Patient name" />
+
+							</div>
+
+						</div>
+						<!--tab3 contents end -->
+
+					</div>
 				</div>
+
 			</div>
-
-		</div>
 		</div>
 	</body>
 </html>
